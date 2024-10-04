@@ -4,8 +4,11 @@ import {CiSearch} from "react-icons/ci";
 import {SlNotebook} from "react-icons/sl";
 import {IoEllipsisVertical} from "react-icons/io5";
 import {BsGripVertical} from 'react-icons/bs';
+import {useParams} from "react-router";
+import {assignments} from "../../Database";
 
 export default function Assignments() {
+    const {cid} = useParams();
     return (
         <div id="wd-assignments">
             <div className="form-group d-flex justify-content-between align-items-center mb-3">
@@ -39,43 +42,20 @@ export default function Assignments() {
                 </div>
             </div>
             <ul className="wd-assignment-link list-group rounded-0">
-                <li className="wd-assignment-list-item list-group-item p-3 ps-1 d-flex align-items-center">
-                    <BsGripVertical className="me-2 fs-3"/>
-                    <SlNotebook className="me-2 fs-4"/>
-                    <div className="ms-2">
-                        <a className="wd-assignment-link d-block mb-1" href="#/Kanbas/Courses/1234/Assignments/123">A1</a>
-                        <div>Not available until May 6 at 12:00am</div>
-                        <div>Due May 13 at 11:59pm | 100pts</div>
-                    </div>
-                    
-                    <div className="ms-auto">
-                        <LessonControlButtons/>
-                    </div>
-                </li>
-                <li className="wd-assignment-list-item list-group-item p-3 ps-1 d-flex align-items-center"> 
-                    <BsGripVertical className="me-2 fs-3"/>
-                    <SlNotebook className="me-2 fs-4"/>
-                    <div className="ms-2">
-                        <a className="wd-assignment-link d-block mb-1" href="#/Kanbas/Courses/1234/Assignments/123">A2</a>
-                        <div>Not available until May 13 at 12:00am</div>
-                        <div>Due May 20 at 11:59am | 100pts</div>
-                    </div>
-                    <div className="ms-auto">
-                        <LessonControlButtons/>
-                    </div>
-                </li>
-                <li className="wd-assignment-list-item list-group-item p-3 ps-1 d-flex align-items-center"> 
-                    <BsGripVertical className="me-2 fs-3"/>
-                    <SlNotebook className="me-2 fs-4"/>
-                    <div className="ms-2">
-                        <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123">A3</a>
-                        <div>Not available until May 20 at 12:00am</div>
-                        <div>Due May 27 at 11:59am | 100pts</div>
-                    </div>
-                    <div className="ms-auto">
-                        <LessonControlButtons/>
-                    </div>
-                </li>
+                {assignments
+                    .filter((assignment: any) => assignment.course === cid)
+                    .map((assignment: any) => (
+                    <li className="wd-assignment-list-item list-group-item p-3 ps-1 d-flex align-items-center" key={assignment._id}>
+                        <BsGripVertical className="me-2 fs-3"/>
+                        <SlNotebook className="me-2 fs-4"/>
+                        <div className="ms-2">
+                            <a className="wd-assignment-link d-block mb-1" href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>{assignment.title}</a>
+                        </div>
+                        <div className="ms-auto">
+                            <LessonControlButtons/>
+                        </div>
+                    </li>
+                ))}
             </ul>
         </div>
     )
