@@ -8,15 +8,27 @@ import {useParams} from "react-router";
 import {Link} from 'react-router-dom';
 import {useSelector, useDispatch} from "react-redux";
 import {FaTrash} from "react-icons/fa";
-import {deleteAssignment} from "./reducer";
+import {setAssignments, deleteAssignment} from "./reducer";
 import ModalAssignment from "./ModalAssignment";
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import * as client from "../Assignments/client";
 
 export default function Assignments() {
     const {cid} = useParams();
     const dispatch = useDispatch();
     const {assignments} = useSelector((state: any) => state.assignmentsReducer);
     const [assignmentId, setAssignmentId] = useState('');
+    const fetchAssignment = async () => {
+        const assignments = await client.findAssignmentForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+    fetchAssignment();
+    }, []);
+    const RemoveAssignment= async (assignmentId: string) => {
+        await client.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+    };
 
     return (
         <div id="wd-assignments">
@@ -55,7 +67,7 @@ export default function Assignments() {
                             </div>
                             <div className="ms-auto">
                                 <FaTrash className="text-danger me-2 mb-1" data-bs-toggle="modal" data-bs-target="#wd-remove-assignment-dialog" onClick={() => setAssignmentId(assignment._id)} />
-                                <ModalAssignment assignmentId={assignmentId} deleteAssignment={(assignmentId) => dispatch(deleteAssignment(assignmentId))}/>
+                                <ModalAssignment assignmentId={assignmentId} deleteAssignment={(assignmentId) => RemoveAssignment(assignmentId)}/>
                                 <LessonControlButtons />
                             </div>
                         </li>

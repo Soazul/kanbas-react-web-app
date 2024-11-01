@@ -1,12 +1,15 @@
-import {modules} from "../../Database";
+
 import {createSlice} from "@reduxjs/toolkit";
 
-const initialState = {modules: modules};
+const initialState = {modules: []};
 // a slice is a collection of reducer logic
 const modulesSlice = createSlice({
     name: "modules", // name of the slice
     initialState, // default state of the slice
     reducers: { // contains reducer functions that defines how a state should change based on a response (updates slice's state based on action.payload)
+        setModules: (state, action) => {
+            state.modules = action.payload;
+          },      
         addModule: (state, {payload: module}) => {
             const newModule: any = {
                 _id: new Date().getTime().toString(),
@@ -28,5 +31,5 @@ const modulesSlice = createSlice({
     }
 });
 
-export const {addModule, deleteModule, updateModule, editModule} = modulesSlice.actions;
+export const {setModules, addModule, deleteModule, updateModule, editModule} = modulesSlice.actions;
 export default modulesSlice.reducer;
