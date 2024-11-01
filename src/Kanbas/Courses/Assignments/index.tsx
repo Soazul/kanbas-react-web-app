@@ -18,7 +18,6 @@ export default function Assignments() {
     const {assignments} = useSelector((state: any) => state.assignmentsReducer);
     const [assignmentId, setAssignmentId] = useState('');
 
-
     return (
         <div id="wd-assignments">
             <div className="form-group d-flex justify-content-between align-items-center mb-3">
