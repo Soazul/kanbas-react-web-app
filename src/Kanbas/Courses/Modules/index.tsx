@@ -4,7 +4,7 @@ import LessonControlButtons from "./LessonControlButtons";
 import {BsGripVertical} from 'react-icons/bs';
 import {useParams} from "react-router";
 import {useState} from "react";
-import { addModule, updateModule, deleteModule, editModule} from "./reducer";
+import {addModule, updateModule, deleteModule, editModule} from "./reducer";
 import {useSelector, useDispatch} from "react-redux";
 
 export default function Modules() {
@@ -12,6 +12,8 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState('');
   const {modules} = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
+  const {currentUser} = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser.role === "FACULTY";
   // dispatch is method used to send an action to the store and it triggers state changes. dispatch(action)
   // action is a javascript object that describes an event
   // the store.ts has a function called reducer, which has all the dispatched actions
@@ -20,14 +22,19 @@ export default function Modules() {
 
   return (
     <div>
-      <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={() => {
-        dispatch(addModule({name: moduleName, course: cid}));
-        setModuleName('');
-      }}/>
-      <br />
-      <br />
-      <br />
-      <br />
+      {isFaculty && (
+        <div>
+          <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={() => {
+          dispatch(addModule({name: moduleName, course: cid}));
+          setModuleName('');
+          }}/>
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      )}
+
       <ul id="wd-modules" className="list-group rounded-0">
         {modules
           .filter((module: any) => module.course === cid)
@@ -36,7 +43,9 @@ export default function Modules() {
             <div className="wd-title p-3 ps-2 bg-secondary">
               <BsGripVertical className="me-2 fs-3" />
               {!module.editing && module.name}
-              {module.editing && (
+              {isFaculty &&  (
+                <span>
+                  {module.editing && (
                 <input className="form-control w-50 d-inline-block" onChange={(e) => dispatch(updateModule({...module, name: e.target.value}))}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -46,6 +55,8 @@ export default function Modules() {
                 value={module.name}/>
               )}
               <ModuleControlButtons moduleId={module._id} deleteModule={(moduleId) => {dispatch(deleteModule(moduleId))}} editModule={(moduleId) => dispatch(editModule(moduleId))}/>
+                </span>
+              )}
             </div>
             {module.lessons && (
               <ul className="wd-lessons list-group rounded-0">
