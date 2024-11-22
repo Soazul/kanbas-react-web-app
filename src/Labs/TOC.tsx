@@ -32,7 +32,7 @@ export default function TOC() {
                 <a id="wd-ngh" href="https://github.com/Soazul/kanbas-node-server-app" className="nav-link">Node GitHub</a>
             </li>
             <li className="nav-item">
-                <a id="wd-render" href="https://kanbas-node-server-app-kz52.onrender.com" className="nav-link">Render</a>
+                <a id="wd-render" href="https://kanbas-node-server-app-hi4w.onrender.com" className="nav-link">Render</a>
             </li>
         </ul>
     );
