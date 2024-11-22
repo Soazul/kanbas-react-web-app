@@ -1,9 +1,10 @@
 import {useParams, useLocation} from "react-router";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addAssignment, updateAssignment} from "./reducer";
-import * as client from "../Assignments/client";
+import * as assignmentClient from "../Assignments/client";
+import { setAssignments } from "./reducer";
 
 export default function AssignmentEditor() {
   const {cid} = useParams();
@@ -21,13 +22,13 @@ export default function AssignmentEditor() {
   const [dueDate, setDueDate] = useState(assignment?.due_date || "");
   const [availableFromDate, setAvailableFromDate] = useState(assignment?.available_from_date || "");
   const [availableUntilDate, setAvailableUntilDate] = useState(assignment?.available_until_date || "");
-
+  
   const createAssignment = async (assignment: any) => {
-    const newAssignment = await client.createAssignment(cid as string, assignment);
+    const newAssignment = await assignmentClient.createAssignment(cid as string, assignment);
     dispatch(addAssignment(newAssignment));
   };
   const saveAssignment = async (assignment: any) => {
-    const status = await client.saveAssignment(assignment._id, assignment);
+    const status = await assignmentClient.saveAssignment(assignment._id, assignment);
     dispatch(updateAssignment(assignment));
   };
 
