@@ -11,7 +11,6 @@ export default function Users() {
     const {uid} = useParams();
     const createUser = async () => {
         const user = await client.createUser({
-            _id: new Date().getTime().toString(),
             firstName: "New",
             lastName: `User${users.length + 1}`,
             username: `newuser${Date.now()}`,

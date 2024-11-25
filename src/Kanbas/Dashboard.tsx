@@ -11,6 +11,9 @@ export default function Dashboard({
   addNewCourse,
   deleteCourse,
   updateCourse,
+  enrolling,
+  setEnrolling,
+  updateEnrollment
 }: {
   courses: any[];
   course: any;
@@ -18,6 +21,9 @@ export default function Dashboard({
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
+  enrolling: boolean;
+  setEnrolling: (enrolling: boolean) => void;
+  updateEnrollment: (courseId: string, enrolled: boolean) => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
@@ -50,9 +56,12 @@ export default function Dashboard({
 
   return (
     <div id="wd-dashboard">
-      <div className="d-flex justify-content-between align-items-center">
-        <h1 id="wd-dashboard-title">Dashboard</h1>
-      </div>
+      <h1 id="wd-dashboard-title">
+        Dashboard
+        <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button>
+      </h1>
       <hr />
       {isFaculty && (
         <div>
@@ -102,12 +111,19 @@ export default function Dashboard({
               <div className="card rounded-3 overflow-hidden">
                 <img src={course.img} height="160px" alt="" />
                 <div className="card-body">
-                  <span
-                    className="wd-dashboard-course-link"
-                    style={{ textDecoration: "none", color: "navy", fontWeight: "bold" }}
-                  >
+                  <h5 className="wd-dashboard-course-title card-title">
+                    {enrolling && (
+                      <button  onClick={(event) => {
+                        event.preventDefault();
+                        updateEnrollment(course._id, !course.enrolled);
+                      }}
+                        className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
+                        {course.enrolled ? "Unenroll" : "Enroll"}
+                      </button>
+                    )}
                     {course.name}
-                  </span>
+                  </h5>
+
                   <p
                     className="wd-dashboard-course-title card-text"
                     style={{ maxHeight: 53, overflow: "hidden" }}
