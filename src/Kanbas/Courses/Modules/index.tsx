@@ -39,12 +39,6 @@ export default function Modules() {
     fetchModules();
   }, []);
 
-  // dispatch is method used to send an action to the store and it triggers state changes. dispatch(action)
-  // action is a javascript object that describes an event
-  // the store.ts has a function called reducer, which has all the dispatched actions
-  // when dispatch is called, Redux passes the action to the reducer and the reducer updates the states accordingly
-  // dispatch -> action -> reducer
-
   return (
     <div>
       {isFaculty && (

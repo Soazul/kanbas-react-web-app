@@ -18,7 +18,6 @@ export default function Kanbas() {
     const findCoursesForUser = async () => {
       try {
         const courses = await userClient.findCoursesForUser(currentUser._id);
-        console.log("currentUser._id", currentUser._id)
         setCourses(courses);
       } catch (error) {
         console.error(error);
@@ -75,7 +74,7 @@ export default function Kanbas() {
                 return c;
             }
         }))
-        setCourse({_id: "1234", name: "", number: "New Number", startDate: "2023-09-10", img: "./images/react.png", endDate: "2023-12-15", description: ""}); // Reset the form fields
+        setCourse({_id: "1234", name: "", number: "New Number", startDate: "2023-09-10", img: "./images/react.png", endDate: "2023-12-15", description: ""});
     };
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);

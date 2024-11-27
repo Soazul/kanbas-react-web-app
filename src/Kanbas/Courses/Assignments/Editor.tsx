@@ -7,37 +7,73 @@ import * as assignmentClient from "../Assignments/client";
 import { setAssignments } from "./reducer";
 
 export default function AssignmentEditor() {
-  const {cid} = useParams();
-  const {pathname} = useLocation();
+  const { cid } = useParams();
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const {assignments} = useSelector((state: any) => state.assignmentsReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
   const assignmentId = pathname.split("/")[5];
   const isEditing = assignmentId !== "new";
-  const assignment = isEditing ? assignments.find((a: any) => a._id === assignmentId) : null;
 
-  const [title, setTitle] = useState(assignment?.title || "");
-  const [description, setDescription] = useState(assignment?.description || "");
-  const [points, setPoints] = useState(assignment?.points || 0);
-  const [dueDate, setDueDate] = useState(assignment?.due_date || "");
-  const [availableFromDate, setAvailableFromDate] = useState(assignment?.available_from_date || "");
-  const [availableUntilDate, setAvailableUntilDate] = useState(assignment?.available_until_date || "");
-  
+  // State for assignment fields
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [points, setPoints] = useState(0);
+  const [due_date, setDueDate] = useState("");
+  const [available_from_date, setAvailableFromDate] = useState("");
+  const [available_until_date, setAvailableUntilDate] = useState("");
+
+  // Fetch assignments from API if editing
+  useEffect(() => {
+    const fetchAssignment = async () => {
+      if (isEditing) {
+        const assignment = assignments.find((a: any) => a._id === assignmentId);
+        if (!assignment) {
+          const fetchedAssignments = await assignmentClient.findAssignmentForCourse(cid as string);
+          dispatch(setAssignments(fetchedAssignments));
+        }
+      }
+    };
+    fetchAssignment();
+  }, [cid, assignmentId, isEditing, assignments, dispatch]);
+
+  useEffect(() => {
+    if (isEditing) {
+      const assignment = assignments.find((a: any) => a._id === assignmentId);
+      if (assignment) {
+        setTitle(assignment.title || "");
+        setDescription(assignment.description || "");
+        setPoints(assignment.points || 0);
+        setDueDate(new Date(assignment.due_date).toISOString().split('T')[0] || "");
+        setAvailableFromDate(new Date(assignment.available_from_date).toISOString().split('T')[0] || "");
+        setAvailableUntilDate(new Date(assignment.available_until_date).toISOString().split('T')[0] || "");
+      }
+    }
+  }, [assignmentId, assignments]);
+
   const createAssignment = async (assignment: any) => {
     const newAssignment = await assignmentClient.createAssignment(cid as string, assignment);
     dispatch(addAssignment(newAssignment));
   };
+
   const saveAssignment = async (assignment: any) => {
-    const status = await assignmentClient.saveAssignment(assignment._id, assignment);
-    dispatch(updateAssignment(assignment));
+    const updatedAssignment = await assignmentClient.saveAssignment(assignment._id, assignment);
+    dispatch(updateAssignment(updatedAssignment));
   };
 
   const save = () => {
-    const newAssignment = {title, description, points, due_date: dueDate, available_from_date: availableFromDate, available_until_date: availableUntilDate};
+    const newAssignment = {
+      title,
+      description,
+      points,
+      due_date,
+      available_from_date,
+      available_until_date
+    };
     if (isEditing) {
-      saveAssignment({...newAssignment, _id: assignmentId});
+      saveAssignment({ ...newAssignment, _id: assignmentId });
     } else {
-      createAssignment({...newAssignment, _id: assignmentId});
+      createAssignment(newAssignment);
     }
   };
 
@@ -117,15 +153,15 @@ export default function AssignmentEditor() {
             <label htmlFor="wd-assign-to">Assign to</label>
             <input type="text" id="wd-assign-to" value="Everyone" title="Assign to" className="form-control mb-3"/>
             <label htmlFor="wd-due-date">Due</label>
-            <input type="date" id="wd-due-date" value={dueDate} className="form-control mb-3" onChange={(e) => setDueDate(e.target.value)}/>
+            <input type="date" id="wd-due-date" value={due_date} className="form-control mb-3" onChange={(e) => setDueDate(e.target.value)}/>
             <div className="row">
               <div className="col">
                 <label htmlFor="wd-available-from">Available from</label>
-                <input type="date" id="wd-available-from" value={availableFromDate} className="form-control mb-3" onChange={(e) => setAvailableFromDate(e.target.value)}/>
+                <input type="date" id="wd-available-from" value={available_from_date} className="form-control mb-3" onChange={(e) => setAvailableFromDate(e.target.value)}/>
               </div>
               <div className="col">
                 <label htmlFor="wd-available-until">Until</label>
-                <input type="date" id="wd-available-until" value={availableUntilDate} className="form-control" onChange={(e) => setAvailableUntilDate(e.target.value)}/>
+                <input type="date" id="wd-available-until" value={available_until_date} className="form-control" onChange={(e) => setAvailableUntilDate(e.target.value)}/>
               </div>
             </div>
           </div>

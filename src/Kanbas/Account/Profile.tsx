@@ -34,9 +34,8 @@ export default function Profile() {
                 <input id="wd-password" defaultValue={profile.password} type="password" className="form-control mb-2" onChange={(e) => setProfile({...profile, password: e.target.value})}></input>
                 <input id="wd-firstname" defaultValue={profile.firstName} className="form-control mb-2" onChange={(e) => setProfile({...profile, firstName: e.target.value})}></input>
                 <input id="wd-lastname" defaultValue={profile.lastName} className="form-control mb-2" onChange={(e) => setProfile({...profile, lastName: e.target.value})}></input>
-                <input defaultValue={profile.dob} id="wd-dob" className="form-control mb-2" onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date"/>
+                <input defaultValue={profile.dob ? new Date(profile.dob).toISOString().split('T')[0] : ""} id="wd-dob" className="form-control mb-2" onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date"/>
                 <input defaultValue={profile.email} id="wd-email" className="form-control mb-2" onChange={ (e) => setProfile({ ...profile, email: e.target.value })}/>
-
                 <select id="wd-role" className="form-select mb-2" value={profile.role}onChange={(e) => setProfile({ ...profile, role: e.target.value })}>
                     <option disabled value="USER">User</option>
                     <option value="ADMIN">Admin</option>
@@ -47,7 +46,6 @@ export default function Profile() {
                 <button onClick={signout} className="btn btn-danger w-100 mb-2" id="wd-signout-btn">Sign out</button>
                 </div>
             )}
-            
         </div>
     )
 }

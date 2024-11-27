@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { addEnrollment, deleteEnrollment } from "../Kanbas/Enrollments/reducer";
+import { useSelector} from "react-redux";
 import ProtectedRoute from "./Enrollments/ProtectedRoute";
-import * as enrollmentsClient from "./Enrollments/client";
 
 export default function Dashboard({
   courses,
@@ -83,43 +81,33 @@ export default function Dashboard({
           {courses.map((course: any) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }} key={course._id}>
               <div className="card rounded-3 overflow-hidden">
-                <img src={course.img} height="160px" alt="" />
+              {course.img && (<img src={course.img} height="160px" alt=""/>)}
                 <div className="card-body">
                   <h5 className="wd-dashboard-course-title card-title">
-                    {/* {enrolling && (
-                      <button  onClick={(event) => {
-                        event.preventDefault();
-                        updateEnrollment(course._id, !course.enrolled);
-                      }}
-                        className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
+                    {enrolling && (
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          updateEnrollment(course._id, !course.enrolled);
+                        }}
+                        className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}
+                      >
                         {course.enrolled ? "Unenroll" : "Enroll"}
                       </button>
                     )}
-                    {course.name} */}
-                    {enrolling && (
-  <button
-    onClick={(event) => {
-      event.preventDefault();
-      updateEnrollment(course._id, !course.enrolled);
-    }}
-    className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}
-  >
-    {course.enrolled ? "Unenroll" : "Enroll"}
-  </button>
-)}
+                    {course.name}
                   </h5>
-
                   <p
                     className="wd-dashboard-course-title card-text"
                     style={{ maxHeight: 53, overflow: "hidden" }}
                   >
                     {course.description}
                   </p>
-                  <ProtectedRoute courseId={course._id}>
+                  {/* <ProtectedRoute courseId={course._id}> */}
                     <Link to={`/Kanbas/Courses/${course._id}/Home`} className="btn btn-primary">
                       Go
                     </Link>
-                  </ProtectedRoute>
+                  {/* </ProtectedRoute> */}
                   {isFaculty && (
                     <span>
                       <button
