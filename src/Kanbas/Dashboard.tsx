@@ -81,7 +81,7 @@ export default function Dashboard({
           {courses.map((course: any) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }} key={course._id}>
               <div className="card rounded-3 overflow-hidden">
-              {course.img && (<img src={course.img} height="160px" alt=""/>)}
+              {<img src={course.img} height="160px" alt=""/>}
                 <div className="card-body">
                   <h5 className="wd-dashboard-course-title card-title">
                     {enrolling && (
